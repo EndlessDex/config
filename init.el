@@ -87,8 +87,10 @@
 
 ;;Turn on syntax hilighting
 (global-font-lock-mode 1)
+
 ;;Maximize # of colors
 (setq font-lock-maximum-decoration t)
+
 ;;Set font
 (set-face-attribute 'default nil :font "DejaVu Sans Mono 12")
 
