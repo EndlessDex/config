@@ -37,6 +37,8 @@
   (unless (package-installed-p package)
     (package-install package)))
 
+(setq vc-follow-symlinks t)
+
 (require 'better-defaults)
 ;;Make scratch page default
 (setq initial-buffer-choice t)
@@ -84,7 +86,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-doom-theme/")
 (add-to-list 'load-path "~/.emacs.d/emacs-doom-theme/")
 (require 'doom)
-(load-theme 'doom-dark t)
+(load-theme 'doom-molokai t)
 
 ;;Turn on syntax hilighting
 (global-font-lock-mode 1)
