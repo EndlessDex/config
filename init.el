@@ -28,6 +28,7 @@
     guide-key
     yasnippet
     highlight-numbers
+    rainbow-delimiters
     ))
 
 (unless package-archive-contents
@@ -85,7 +86,7 @@
 ;;Color themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-doom-theme/")
 (add-to-list 'load-path "~/.emacs.d/emacs-doom-theme/")
-(require 'doom)
+(require 'doom-themes)
 (load-theme 'doom-molokai t)
 
 ;;Turn on syntax hilighting
