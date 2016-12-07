@@ -102,7 +102,7 @@ alias of='shutdown now'
 alias ls='ls -v --color=tty'
 alias lsa='ls -vA --color=tty'
 alias .='cd .'
-export EDITOR="emacs -nw"
+export EDITOR="emacsclient"
 
 alias myssh="ssh pondxtr2@linux.ews.illinois.edu"
 
