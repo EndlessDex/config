@@ -96,7 +96,7 @@
 (setq font-lock-maximum-decoration t)
 
 ;;Set font
-(set-face-attribute 'default nil :font "DejaVu Sans Mono 12")
+(setq default-frame-alist'((font . "DejaVu Sans Mono 12")))
 
 (require 'ido)
 (require 'ido-vertical-mode)
@@ -358,7 +358,8 @@
  '(rainbow-delimiters-depth-7-face ((t (:foreground "dark violet"))))
  '(rainbow-delimiters-depth-8-face ((t (:foreground "magenta")))))
 
-(server-start)
+;; (server-start)
+
 (defun maybe-delete-frame-buffer (frame)
   "When a dedicated FRAME is deleted, also kill its buffer.
 A dedicated frame contains a single window whose buffer is not

@@ -102,7 +102,11 @@ alias of='shutdown now'
 alias ls='ls -v --color=tty'
 alias lsa='ls -vA --color=tty'
 alias .='cd .'
-export EDITOR="emacsclient"
+export EDITOR=~/config/emacsScript.sh
+
+alias e=~/config/emacsScript.sh
+
+export PYTHONSTARTUP="/home/dexter/.pyrc"
 
 alias myssh="ssh pondxtr2@linux.ews.illinois.edu"
 
