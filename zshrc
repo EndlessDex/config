@@ -98,6 +98,7 @@ alias in='yaourt -Sy && yaourt -S'
 alias unin='yaourt -Rs'
 alias autoclean='yaourt -Rns $(yaourt -Qtdq)'
 alias of='shutdown now'
+alias ecessh='ssh root@localhost -p2222'
 
 alias ls='ls -v --color=tty'
 alias lsa='ls -vA --color=tty'

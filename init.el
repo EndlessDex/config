@@ -1,4 +1,4 @@
-;;; init.el --- emacs configuation
+;;; package --- Summery
 ;;; Commentary:
 ;;; Code:
 (require 'package)
@@ -10,25 +10,27 @@
 
 (defvar package-list
   '(
-    multi-term
+    auto-compile
     better-defaults
-    dash
-    ido-ubiquitous
-    ido-vertical-mode
-    smex
     company
     company-c-headers
     company-irony
-    irony
+    dash
+    disaster
     flycheck
-    flycheck-pos-tip
     flycheck-irony
-    multiple-cursors
-    visual-fill-column
+    flycheck-pos-tip
     guide-key
-    yasnippet
     highlight-numbers
+    ido-ubiquitous
+    ido-vertical-mode
+    irony
+    multi-term
+    multiple-cursors
     rainbow-delimiters
+    smex
+    visual-fill-column
+    yasnippet
     ))
 
 (unless package-archive-contents
@@ -38,16 +40,30 @@
   (unless (package-installed-p package)
     (package-install package)))
 
+;; Autocompile elisp files
+(setq load-prefer-newer t)
+(require 'auto-compile)
+(auto-compile-on-load-mode)
+(auto-compile-on-save-mode)
+
+;; Follow symlinks when C-x C-f
 (setq vc-follow-symlinks t)
 
 (require 'better-defaults)
-;;Make scratch page default
-(setq initial-buffer-choice t)
+
+;;Make multiterm page default
+;; (multi-term)
+(setq inhibit-startup-screen t)
+;; (add-to-list 'frame-notice-user-settings '(switch-to-buffer "*terminal<1>*"))
+
+
 ;;Make cursor a bar instead of block
 (setq-default cursor-type 'bar)
+
 ;;Highlight line
 (global-hl-line-mode)
 
+;;Enable syntax highlighting for numbers
 (add-hook 'prog-mode-hook 'highlight-numbers-mode)
 
 (defvar dont-indent-modes
@@ -74,6 +90,7 @@
 
 ;;Newline and indent on enter key
 (define-key global-map (kbd "RET") 'newline-and-indent)
+
 ;;Make prompts y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -82,7 +99,6 @@
   (interactive)
   (indent-region (point-min) (point-max) nil))
 
-
 ;;Color themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-doom-theme/")
 (add-to-list 'load-path "~/.emacs.d/emacs-doom-theme/")
@@ -90,7 +106,7 @@
 (load-theme 'doom-molokai t)
 
 ;;Turn on syntax hilighting
-(global-font-lock-mode 1)
+(global-font-lock-mode t)
 
 ;;Maximize # of colors
 (setq font-lock-maximum-decoration t)
@@ -101,15 +117,19 @@
 (require 'ido)
 (require 'ido-vertical-mode)
 (require 'ido-ubiquitous)
+
 ;;Better file autocomplete everywhere
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode t)
 (ido-ubiquitous-mode t)
+
 ;;Vertical file list
 (ido-vertical-mode t)
+
 ;;Arrow keys to files
 (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
+
 ;;Show number of matching files
 (setq ido-vertical-show-count t)
 
@@ -370,4 +390,9 @@ displayed anywhere else."
         (when (eq 1 (length (get-buffer-window-list buffer nil t)))
           (kill-buffer buffer))))))
 (add-to-list 'delete-frame-functions #'maybe-delete-frame-buffer)
+
+;; C/C++ Disassembler
+(require 'disaster)
+(define-key c-mode-base-map (kbd "C-c d") 'disaster)
+
 ;;; init.el ends here
