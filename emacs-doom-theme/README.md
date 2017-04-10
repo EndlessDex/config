@@ -8,64 +8,79 @@ An opinionated UI plugin/pack of themes extracted from my [emacs.d],
 inspired by the One Dark/Light UI and syntax themes
 in [Atom](http://atom.io).
 
-Includes optional dimming of non-source buffers (and minibuffer), a
-[neotree] theme with font icons, and (soon) a mode-line config.
+[See the screenshots.][screenshots]
+
+**Notes:**
+
++ Uses `face-remapping-alist`, which won't work in terminal emacs (but
+  fails gracefully).
++ Tested mainly on Emacs 25.1+
+
+## Features
+
++ An assortment of color schemes (feel free to request or contribute more)
+
+Optional features:
++ Dimming of non-source buffers (and minibuffer) to visually
+  distinguish file buffers from temporary or special buffers.
++ A [neotree] theme with configurable font icons (requires the fonts
+  in [all-the-icons] to be installed).
++ Highlighting of the current line number (requires `nlinum` and
+  `hl-line-mode`).
++ _(soon)_ A mode-line config.
 
 Currently available colorschemes:
 + **doom-one**: inspired by Atom One Dark
 + **doom-molokai**: based on molokai
 
 Soon to come:
++ **doom-one-classic**: a more vibrant version of doom-one
 + **doom-one-light**: inspired by Atom One Light
-+ **doom-tron**: doom-one, but with
-  daylerees' [Tron Legacy][daylerees] colorscheme
-+ **doom-peacock**: doom-one, but with daylerees' [Peacock][daylerees]
-  colorscheme
-
-**Notes:**
-
-+ Uses `face-remapping-alist`, which won't work in terminal emacs (but
-  degrades gracefully).
-+ Tested mainly on Emacs 24.5+
-
-## Screenshots
-
-Find them [in the screenshots branch][screenshots]
++ **doom-tron**: daylerees' [Tron Legacy][daylerees] colorscheme
++ **doom-peacock**: daylerees' [Peacock][daylerees] colorscheme
++ **doom-spacegrey**: [I'm sure you've heard of it][spacegrey]
++ **doom-mono-dark**: A minimalistic, custom colorscheme
++ **doom-mono-light**: A minimalistic, custom colorscheme
 
 ## Installation
 
-1. Install from MELPA `M-x package-install RET doom-themes`, or clone
-   the repo somewhere in your `load-path`.
+`M-x package-install RET doom-themes`, or clone the repo somewhere in
+your `load-path`.
 
-2. If you want the neotree theme, download and install the fonts included
-   with [all-the-icons].
-
-3. `(require 'doom-themes)` and then load the theme you want.
-
-Example configuration:
+A comprehensive configuration example:
 
 ```emacs-lisp
 (require 'doom-themes)
 (load-theme 'doom-one t) ;; or doom-dark, etc.
 
+;;; Settings (defaults)
+(setq doom-enable-bold t    ; if nil, bolding are universally disabled
+      doom-enable-italic t  ; if nil, italics are universally disabled
+
+      ;; doom-one specific settings
+      doom-one-brighter-modeline nil
+      doom-one-brighter-comments nil
+      )
+
 ;;; OPTIONAL
-;; brighter source buffers
-(add-hook 'find-file-hook 'doom-buffer-mode)
+;; brighter source buffers (that represent files)
+(add-hook 'find-file-hook 'doom-buffer-mode-maybe)
+;; if you use auto-revert-mode
+(add-hook 'after-revert-hook 'doom-buffer-mode-maybe)
+;; you can brighten other buffers (unconditionally) with:
+(add-hook 'ediff-prepare-buffer-hook 'doom-buffer-mode)
+
 ;; brighter minibuffer when active
 (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
-;; Custom neotree theme
-(require 'doom-neotree)
+
+;; Enable custom neotree theme
+(require 'doom-neotree)    ; all-the-icons fonts must be installed!
+
+;; Enable nlinum line highlighting
+(require 'doom-nlinum)     ; requires nlinum and hl-line-mode
 ```
 
-## Configuration
-
-+ `doom-enable-bold` (default: `t`): if nil, bolding will be disabled
-  across all faces.
-+ `doom-enable-italic` (default: `t`): if nil, italicization will be
-  disabled across all faces.
-+ `doom-enable-brighter-comments` (default: `nil`): If non-nil,
-  comments are brighter and easier to see.
-
+## Integrations
 ### Org-mode
 
 To get the most out of these themes in org-mode, you need:
@@ -76,20 +91,7 @@ To get the most out of these themes in org-mode, you need:
       org-fontify-quote-and-verse-blocks t)
 ```
 
-## Enabling other features
-
-### Dimmed non-source buffers/windows
-
-`(add-hook 'find-file-hook 'doom-buffer-mode)`
-
-Enable `doom-buffer-mode` in buffers where you want a slightly
-brighter background. I use it to visually set apart source buffers
-from popups, the minibuffer, or temporary buffers.
-
-This works by remapping the `default`, `hl-line` and `linum` faces to
-`doom-default`, `doom-hl-line` and `doom-linum`.
-
-### Neotree integration
+### neotree
 
 `(require 'doom-neotree)`
 
@@ -97,51 +99,53 @@ Modifies [neotree] to use icons for folders and files (as shown in the
 [screenshots]).
 
 Note:
-+ File icons are **disabled by default**. Use
-  `(setq doom-neotree-enable-file-icons t)` to enable them.
++ This disables `neo-vc-integration`, because the two are
+  incompatible.
++ `doom-neotree-enable-file-icons` (default: `t`)
++ `doom-neotree-enable-folder-icons` (default: `t`)
++ `doom-neotree-enable-chevron-icons` (default: `t`)
 + `doom-neotree-file-icons` determines what style of icons to use:
-  + `t`: use the wide range of [all-the-icons] file icons.
+  + `t`: use the wide range of [all-the-icons] file type icons.
   + `'simple`: use a minimialistic set of file icons (most akin to
     Atom's default iconset).
   + `nil`: only use the folder icon for directories. No icons for files.
-+ This disables `neo-vc-integration`, because the two are
-  incompatible.
-+ This can be customized by changing these variables:
-  + `doom-neotree-folder-size` (default: `1.0`) The `:height` to
++ Customize the icons with:
+  + `doom-neotree-enable-type-colors` (default: `t`): if non-nil, and
+    `doom-neotree-file-icons` is `simple`, then color files/folders by
+    category (hidden, media, documentation, data or build file). See
+    `doom-neotree-file-face-re-alist` to configure this, and what face
+    to assign each file type.
+  + `doom-neotree-project-size` (default: `1.4`) The `:height` to
+    display the project icons (at the top) at.
+  + `doom-neotree-folder-size` (default: `1.05`) The `:height` to
     display folder icons at.
   + `doom-neotree-chevron-size` (default: `0.8`) The `:height` to
     display chevron icons at.
   + `doom-neotree-line-spacing` (default: `2`): line-spacing to use in
     the neotree buffer.
-  + `doom-neotree-enable-file-icons` (default: `nil`) If `t`, display
-    filetype icons next to each file. If set to `simple`, a
-    minimalistic set of icons will be used (much closer to Atom's
-    look).
-  + `doom-neotree-enable-folder-icons` (default: `t`)
-  + `doom-neotree-enable-chevron-icons` (default: `t`)
+  + `doom-neotree-enable-variable-pitch` (default: `t`): if non-nil,
+    file/folder labels will have the `variable-pitch` face applied to
+    them.
 + These faces can be customized:
-  + `doom-neotree-folder-face`: face for folder icons
-  + `doom-neotree-chevron-face`: face for chevron icons
+  + `doom-neotree-dir-face`: face for folders
+  + `doom-neotree-file-face`: face for files
++ If `doom-neotree-enable-type-colors` is non-nil, file and folder
+  entries will be colored with these faces, depending on their "type":
+  + `doom-neotree-hidden-file-face` (dotfiles, *.o, *.pyc, *.elc, etc)
+  + `doom-neotree-text-file-face` (READMEs, LICENSEs, org, md, etc.)
+  + `doom-neotree-media-file-face` (images, video, audio, archives, etc.)
+  + `doom-neotree-data-file-face` (json, xml, toml, yaml, etc.)
 
-### Mode-line config
+### mode-line config
 
 The custom mode-line isn't part of doom-themes yet, but will be soon.
 
 In the meantime, check out [my mode-line configuration][mode-line] in
 my [emacs.d].
 
-### Brighter minibuffer
-
-`(add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)`
-
-This highlights the minibuffer while its active by remapping the
-`default` face to `doom-minibuffer-active`.
-
-Note: there is no way to reliably change the minibuffer's background
-permanently.
-
 
 [all-the-icons]: https://github.com/domtronn/all-the-icons.el
+[spacegrey]: http://kkga.github.io/spacegray/
 [daylerees]: http://daylerees.github.io/
 [emacs.d]: https://github.com/hlissner/.emacs.d
 [mode-line]: https://github.com/hlissner/.emacs.d/blob/master/core/core-modeline.el

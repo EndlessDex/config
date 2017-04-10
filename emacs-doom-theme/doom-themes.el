@@ -5,11 +5,11 @@
 ;; Author: Henrik Lissner <http://github/hlissner>
 ;; Maintainer: Henrik Lissner <henrik@lissner.net>
 ;; Created: May 22, 2016
-;; Modified: October 10, 2016
-;; Version: 1.1.3
-;; Keywords: dark blue atom one theme
+;; Modified: February 22, 2017
+;; Version: 1.1.9
+;; Keywords: dark blue atom one theme neotree nlinum icons
 ;; Homepage: https://github.com/hlissner/emacs-doom-theme
-;; Package-Requires: ((emacs "24.4") (dash "2.12.0") (all-the-icons "1.0.0"))
+;; Package-Requires: ((emacs "24.4") (all-the-icons "1.0.0") (cl-lib "0.5"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -26,16 +26,23 @@
 ;; + doom-dark: based on Molokai
 ;;
 ;; Soon to come:
-;; + doom-one-light**: inspired by Atom One Light
-;; + doom-tron**: doom-one, but with daylerees' Tron Legacy colorscheme
-;; + doom-peacock**: doom-one, but with daylerees' Peacock colorscheme
+;; + doom-one-light: inspired by Atom One Light
+;; + doom-tron: doom-one, but with daylerees' Tron Legacy colorscheme
+;; + doom-peacock: doom-one, but with daylerees' Peacock colorscheme
 ;;
 ;;
 ;; ## Configuration
 ;;
-;; + `doom-enable-bold` (default: `t`)
-;; + `doom-enable-italic` (default: `t`)
-;; + `doom-enable-brighter-comments` (default: `nil`)
+;; + global
+;;     + `doom-enable-bold` (default: `t`): if nil, bolding will be disabled
+;;     across all faces.
+;;     + `doom-enable-italic` (default: `t`): if nil, italicization will be
+;;     disabled across all faces.
+;; + doom-one
+;;     + `doom-one-brighter-modeline` (default: `nil`): If non-nil, the
+;;     mode-line background is slightly brighter.
+;;     + `doom-one-brighter-comments` (default: `nil`): If non-nil, comments
+;;     are brighter and easier to see.
 ;;
 ;;
 ;; ## Installation
@@ -63,7 +70,7 @@
 ;;
 ;;; Code:
 
-(require 'dash)
+(require 'cl-lib)
 
 (defgroup doom-themes nil
   "Options for doom-themes"
@@ -89,6 +96,10 @@
   "A face for the current line highlight."
   :group 'doom-themes)
 
+(defface doom-org-hide '((t (:inherit org-hide)))
+  "A face for hidden elements in org-mode. Only active if `doom-buffer-mode' is active."
+  :group 'doom-themes)
+
 ;;
 (defcustom doom-enable-bold t
   "If nil, bold will remove removed from all faces."
@@ -97,11 +108,6 @@
 
 (defcustom doom-enable-italic t
   "If nil, italics will remove removed from all faces."
-  :group 'doom-themes
-  :type 'boolean)
-
-(defcustom doom-enable-brighter-comments nil
-  "If non-nil, comments are brighter and easier to see."
   :group 'doom-themes
   :type 'boolean)
 
@@ -114,16 +120,15 @@
 
 (defun doom-blend (color1 color2 alpha)
   (apply (lambda (r g b) (format "#%02x%02x%02x" (* r 255) (* g 255) (* b 255)))
-         (--zip-with (+ (* alpha it) (* other (- 1 alpha)))
-                     (doom-name-to-rgb color1)
-                     (doom-name-to-rgb color2))))
+         (cl-mapcar (lambda (it other) (+ (* alpha it) (* other (- 1 alpha))))
+                    (doom-name-to-rgb color1)
+                    (doom-name-to-rgb color2))))
 
 (defun doom-darken (color alpha)
   (doom-blend color "#000000" (- 1 alpha)))
 
 (defun doom-lighten (color alpha)
   (doom-blend color "#FFFFFF" (- 1 alpha)))
-
 
 (defun doom--face-remap-add-relative (orig-fn &rest args)
   "Advice function "
@@ -152,16 +157,31 @@ linum) to their doom-theme variants."
         (put 'face-remapping-alist 'permanent-local t)
         ;; Brighten up file buffers; darken special and popup buffers
         (set-face-attribute 'fringe nil :background (face-attribute 'doom-default :background))
+        ;; Update `doom-org-hide'
+        (when (eq major-mode 'org-mode)
+          (set-face-attribute 'doom-org-hide nil
+                              :inherit 'org-hide
+                              :background (face-attribute 'doom-default :background)
+                              :foreground (face-attribute 'doom-default :background)))
         (setq-local face-remapping-alist
                     (append face-remapping-alist
                             '((default doom-default)
                               (hl-line doom-hl-line)
-                              (linum doom-linum)))))
+                              (linum doom-linum)
+                              (org-hide doom-org-hide)))))
     (set-face-attribute 'fringe nil :background (face-attribute 'default :background))
     (put 'face-remapping-alist 'permanent-local nil)
     ;; Remove face remaps
     (mapc (lambda (key) (setq-local face-remapping-alist (assq-delete-all key face-remapping-alist)))
-          '(default hl-line linum))))
+          '(default hl-line linum org-hide))))
+
+;;;###autoload
+(defun doom-buffer-mode-maybe ()
+  "Enable `doom-buffer-mode' in the current buffer, if it isn't already and the
+buffer represents a real file."
+  (when (and (not doom-buffer-mode)
+             buffer-file-name)
+    (doom-buffer-mode +1)))
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)
