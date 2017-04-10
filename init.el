@@ -56,6 +56,7 @@
 (setq inhibit-startup-screen t)
 ;; (add-to-list 'frame-notice-user-settings '(switch-to-buffer "*terminal<1>*"))
 
+(elpy-enable)
 
 ;;Make cursor a bar instead of block
 (setq-default cursor-type 'bar)
@@ -102,8 +103,8 @@
 ;;Color themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-doom-theme/")
 (add-to-list 'load-path "~/.emacs.d/emacs-doom-theme/")
-(require 'doom-themes)
 (load-theme 'doom-molokai t)
+(setq doom-enable-brighter-comments t)
 
 ;;Turn on syntax hilighting
 (global-font-lock-mode t)
@@ -182,7 +183,7 @@
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
 (add-hook 'objc-mode-hook 'irony-mode)
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c-mode))
 
 (defun my-irony-hook ()
   (define-key irony-mode-map [remap completion-at-point]
@@ -246,7 +247,17 @@
 (add-hook 'text-mode-hook 'flyspell-mode)
 (setq visual-fill-column-width 100)
 (add-hook 'text-mode-hook 'turn-on-visual-fill-column-mode)
-
+(setq flyspell-issue-message-flag nil)
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (flyspell-prog-mode)
+            ; ...
+            ))
+(add-hook 'c-mode-hook
+          (lambda ()
+            (flyspell-prog-mode)
+            ; ...
+          ))
 ;;Deletes selected text when start typing
 (delete-selection-mode t)
 
@@ -353,6 +364,7 @@
              nil
              '(("\\(FIXME:\\|TODO:\\|BUG:\\|@todo\\|@param\\)" 1 font-lock-warning-face t)))))
 
+
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (custom-set-variables
@@ -360,10 +372,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
+  '(package-selected-packages
    (quote
     (highlight-numbers yasnippet visual-fill-column smex rainbow-delimiters powerline multiple-cursors multi-term ido-vertical-mode ido-ubiquitous guide-key golden-ratio flycheck-pos-tip flycheck-irony doom company-irony company-c-headers better-defaults)))
- '(rainbow-delimiters-max-face-count 8))
+ '(rainbow-delimiters-max-face-count 8)
+ '(tab-stop-list
+   (quote
+    (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -377,8 +392,6 @@
  '(rainbow-delimiters-depth-6-face ((t (:foreground "medium blue"))))
  '(rainbow-delimiters-depth-7-face ((t (:foreground "dark violet"))))
  '(rainbow-delimiters-depth-8-face ((t (:foreground "magenta")))))
-
-;; (server-start)
 
 (defun maybe-delete-frame-buffer (frame)
   "When a dedicated FRAME is deleted, also kill its buffer.
