@@ -2,11 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 (require 'package)
-
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("marmalade" . "https://marmalade-repo.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
 (package-initialize)
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("marmalade" . "https://marmalade-repo.org/packages/")))
 
 (defvar package-list
   '(
@@ -33,9 +32,11 @@
     yasnippet
     ))
 
-(unless package-archive-contents
+;; Update package databases
+(when (not package-archive-contents)
   (package-refresh-contents))
 
+;; Install new packages
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
@@ -99,12 +100,6 @@
 (defun indent-buffer ()
   (interactive)
   (indent-region (point-min) (point-max) nil))
-
-;;Color themes
-(add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-doom-theme/")
-(add-to-list 'load-path "~/.emacs.d/emacs-doom-theme/")
-(load-theme 'doom-molokai t)
-(setq doom-enable-brighter-comments t)
 
 ;;Turn on syntax hilighting
 (global-font-lock-mode t)
