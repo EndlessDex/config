@@ -362,31 +362,7 @@
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-  '(package-selected-packages
-   (quote
-    (highlight-numbers yasnippet visual-fill-column smex rainbow-delimiters powerline multiple-cursors multi-term ido-vertical-mode ido-ubiquitous guide-key golden-ratio flycheck-pos-tip flycheck-irony doom company-irony company-c-headers better-defaults)))
- '(rainbow-delimiters-max-face-count 8)
- '(tab-stop-list
-   (quote
-    (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(rainbow-delimiters-depth-1-face ((t (:foreground "red"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "dark orange"))))
- '(rainbow-delimiters-depth-3-face ((t (:foreground "yellow"))))
- '(rainbow-delimiters-depth-4-face ((t (:foreground "lime green"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "deep sky blue"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "medium blue"))))
- '(rainbow-delimiters-depth-7-face ((t (:foreground "dark violet"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "magenta")))))
+
 
 (defun maybe-delete-frame-buffer (frame)
   "When a dedicated FRAME is deleted, also kill its buffer.
@@ -402,5 +378,35 @@ displayed anywhere else."
 ;; C/C++ Disassembler
 (require 'disaster)
 (define-key c-mode-base-map (kbd "C-c d") 'disaster)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "red"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "dark orange"))))
+ '(rainbow-delimiters-depth-3-face ((t (:foreground "yellow"))))
+ '(rainbow-delimiters-depth-4-face ((t (:foreground "lime green"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "deep sky blue"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "medium blue"))))
+ '(rainbow-delimiters-depth-7-face ((t (:foreground "dark violet"))))
+ '(rainbow-delimiters-depth-8-face ((t (:foreground "magenta")))))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("34c6da8c18dcbe10d34e3cf0ceab80ed016552cb40cee1b906a42fd53342aba3" "227e2c160b0df776257e1411de60a9a181f890cfdf9c1f45535fc83c9b34406b" "9f3181dc1fabe5d58bbbda8c48ef7ece59b01bed606cfb868dd147e8b36af97c" "f78de13274781fbb6b01afd43327a4535438ebaeec91d93ebdbba1e3fba34d3c" default)))
+ '(package-selected-packages
+   (quote
+    (visual-fill-column smex rainbow-delimiters multiple-cursors multi-term ido-vertical-mode ido-ubiquitous highlight-numbers guide-key font-lock+ flycheck-pos-tip flycheck-irony elpy disaster company-irony company-c-headers better-defaults auto-compile)))
+ '(rainbow-delimiters-max-face-count 8)
+ '(tab-stop-list
+   (quote
+    (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120))))
 
 ;;; init.el ends here
