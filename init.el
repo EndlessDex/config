@@ -50,6 +50,8 @@
 ;; Follow symlinks when C-x C-f
 (setq vc-follow-symlinks t)
 
+(load-theme 'doom-molokai t)
+
 (require 'better-defaults)
 
 ;;Make multiterm page default
@@ -58,7 +60,6 @@
 ;; (add-to-list 'frame-notice-user-settings '(switch-to-buffer "*terminal<1>*"))
 
 (elpy-enable)
-
 ;;Make cursor a bar instead of block
 (setq-default cursor-type 'bar)
 
@@ -74,7 +75,8 @@
 ;;Replace tabs with spaces
 (defun untabify-buffer ()
   (interactive)
-  (delete-trailing-whitespace)
+  (unless (member major-mode '(markdown-mode))
+    (delete-trailing-whitespace))
   (unless (member major-mode dont-indent-modes)
     (untabify (point-min) (point-max))))
 
@@ -135,6 +137,14 @@
 (define-key global-map (kbd "M-x") 'smex)
 (define-key global-map (kbd "M-X") 'smex-major-mode-commands)
 
+(defadvice smex (around space-inserts-hyphen activate compile)
+        (let ((ido-cannot-complete-command
+               `(lambda ()
+                  (interactive)
+                  (if (string= " " (this-command-keys))
+                      (insert ?-)
+                    (funcall ,ido-cannot-complete-command)))))
+          ad-do-it))
 ;;Auto-pair border symbols
 (electric-pair-mode t)
 
@@ -403,7 +413,7 @@ displayed anywhere else."
     ("34c6da8c18dcbe10d34e3cf0ceab80ed016552cb40cee1b906a42fd53342aba3" "227e2c160b0df776257e1411de60a9a181f890cfdf9c1f45535fc83c9b34406b" "9f3181dc1fabe5d58bbbda8c48ef7ece59b01bed606cfb868dd147e8b36af97c" "f78de13274781fbb6b01afd43327a4535438ebaeec91d93ebdbba1e3fba34d3c" default)))
  '(package-selected-packages
    (quote
-    (visual-fill-column smex rainbow-delimiters multiple-cursors multi-term ido-vertical-mode ido-ubiquitous highlight-numbers guide-key font-lock+ flycheck-pos-tip flycheck-irony elpy disaster company-irony company-c-headers better-defaults auto-compile)))
+    (markdown-mode visual-fill-column smex rainbow-delimiters multiple-cursors multi-term ido-vertical-mode ido-ubiquitous highlight-numbers guide-key font-lock+ flycheck-pos-tip flycheck-irony elpy disaster company-irony company-c-headers better-defaults auto-compile)))
  '(rainbow-delimiters-max-face-count 8)
  '(tab-stop-list
    (quote
