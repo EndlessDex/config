@@ -111,8 +111,8 @@ export LANG=en_US.UTF-8
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/devel
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv
-source /usr/local/bin/virtualenvwrapper.sh
+export VIRTUALENVWRAPPER_VIRTUALENV=/home/endlessdex/.local/bin/virtualenv
+source /home/endlessdex/.local/bin/virtualenvwrapper.sh
 
 # SVN Config
 prompt_svn() {
@@ -146,8 +146,7 @@ build_prompt() {
   PROMPT+=' '
 }
 # Alias
-alias lsa="ls -a"
-
-eval $(thefuck --alias)
+alias la="ls -a"
+alias lsa="ls -la"
 
 chpwd() {ls;}
