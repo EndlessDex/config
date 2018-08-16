@@ -149,3 +149,5 @@ build_prompt() {
 alias lsa="ls -a"
 
 eval $(thefuck --alias)
+
+chpwd() {ls;}
