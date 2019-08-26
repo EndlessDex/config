@@ -150,3 +150,5 @@ alias la="ls -a"
 alias lsa="ls -la"
 
 chpwd() {ls;}
+
+[[ -a "/etc/zsh_command_not_found" ]] && . /etc/zsh_command_not_found

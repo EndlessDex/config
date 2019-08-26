@@ -94,6 +94,17 @@
 ;; hide the startup message
 (setq inhibit-startup-message t)
 
+
+;; Better builtin terminal
+(use-package multi-term
+  :config
+  (require 'multi-term)
+  (setq multi-term-program "/usr/bin/zsh")
+  (add-hook 'term-mode-hook
+            (lambda ()
+              (setq term-buffer-maximum-size 10000)
+              (setq show-trailing-whitespace nil))))
+
 ;; Make multi-term default
 (multi-term)
 (add-to-list 'frame-notice-user-settings
@@ -198,16 +209,6 @@
 ;; Show colors not hex
 (use-package rainbow-mode)
 
-;; Better builtin terminal
-(use-package multi-term
-  :config
-  (require 'multi-term)
-  (setq multi-term-program "/usr/bin/zsh")
-  (add-hook 'term-mode-hook
-            (lambda ()
-              (setq term-buffer-maximum-size 10000)
-              (setq show-trailing-whitespace nil))))
-
 ;; Python development environment
 (use-package elpy
   :config
@@ -300,6 +301,14 @@
   (end-of-line)
   (make-newline))
 (define-key global-map (kbd "C-S-o") 'make-prev-newline)
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
